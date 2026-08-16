@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayHard!</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #1C1C1E;
+            --text: #F5F5F7;
+            --accent: #FF453A;
+            --radius: 20px;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--accent);
+            stroke-width: 2;
+            fill: none;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+        .viewer-container {
+            width: 100%;
+            max-width: 400px;
+            height: 320px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .status-text {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-top: 0;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .streak-val {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+        .grid-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            padding: 14px;
+            border: none;
+            background: #2C2C2E;
+            color: var(--text);
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        button.primary {
+            background: var(--accent);
+            color: #FFFFFF;
+        }
+        button:active {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <svg class="icon" viewBox="0 0 24 24">
+        <path d="M6 8h12v8H6z"/>
+        <path d="M4 10h2v4H4zM18 10h2v4h-2z"/>
+        <path d="M12 8V6m0 0h2m-2 0H10m4 0h-4"/>
+    </svg>
+    <h1 class="title">StayHard!</h1>
+</div>
+
+<div class="viewer-container">
+    <iframe id="robot-frame" 
+            title="Robot 3D" 
+            allow="autoplay; fullscreen; xr-spatial-tracking" 
+            src="https://sketchfab.com/models/57651698b1974ea39f7004b2366c3a38/embed?autostart=1&transparent=1&ui_controls=0">
+    </iframe>
+</div>
+
+<div class="card">
+    <p class="status-text" id="robot-status">Partenaire d'entraînement actif</p>
+    <div class="streak-val" id="streak-display">Série : 7 jours</div>
+    
+    <div class="grid-buttons">
+        <button class="primary" onclick="validerSeance()">Valider séance</button>
+        <button onclick="simulerEchec()">Simuler oubli</button>
+    </div>
+</div>
+
+<script>
+    const ROBOT_ACTIF = "https://sketchfab.com/models/57651698b1974ea39f7004b2366c3a38/embed?autostart=1&transparent=1&ui_controls=0";
+    const ROBOT_MOQUEUR = "https://sketchfab.com/models/9b1c86da128147e59bdbb9092ad40d2e/embed?autostart=1&transparent=1&ui_controls=0";
+
+    let streak = 7;
+
+    function mettreAJourAffichage() {
+        const frame = document.getElementById('robot-frame');
+        const status = document.getElementById('robot-status');
+        const streakDisplay = document.getElementById('streak-display');
+
+        streakDisplay.innerText = `Série : ${streak} jours`;
+
+        if (streak === 0) {
+            frame.src = ROBOT_MOQUEUR;
+            status.innerText = "Mode Sanction : Discipline rompue";
+            status.style.color = "#FF453A";
+        } else {
+            frame.src = ROBOT_ACTIF;
+            status.innerText = "Partenaire d'entraînement actif";
+            status.style.color = "#8E8E93";
+        }
+    }
+
+    function validerSeance() {
+        streak++;
+        mettreAJourAffichage();
+    }
+
+    function simulerEchec() {
+        streak = 0;
+        mettreAJourAffichage();
+    }
+</script>
+
+</body>
+</html>
